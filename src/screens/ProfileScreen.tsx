@@ -65,7 +65,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
                     {/* Preferences Section */}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Preferences</Text>
-                        <TouchableOpacity style={styles.menuItem}>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyAddresses')}>
                             <View style={styles.menuItemLeft}>
                                 <View style={[styles.menuIcon, { backgroundColor: 'rgba(34, 197, 94, 0.2)' }]}>
                                     <MaterialIcons name="location-on" size={20} color={colors.primary} />

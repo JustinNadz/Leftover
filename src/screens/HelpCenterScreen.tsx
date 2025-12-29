@@ -1,18 +1,73 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    TextInput,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNav } from '../components';
 import { colors, spacing, fontSize, borderRadius } from '../theme';
 
-const filterTabs = ['All topics', 'Ordering', 'Payments'];
+const popularTopics = ['Payout Status', 'Cancel Order', 'Update Menu', 'Store Hours'];
 
-const faqItems = [
-    { id: '1', question: 'How do I show proof of purchase?', answer: null },
-    { id: '2', question: 'Do you accept GCash or Maya?', answer: 'Yes! We support major PH e-wallets including GCash and Maya, as well as credit/debit cards. You can manage your payment methods in your Profile under "Payment Options".' },
-    { id: '3', question: 'What if the merchant is closed?', answer: null },
-    { id: '4', question: 'How long is the food good for?', answer: null },
-    { id: '5', question: 'When will I get my refund?', answer: null },
+interface FAQSection {
+    id: string;
+    title: string;
+    icon: keyof typeof MaterialIcons.glyphMap;
+    questions: { id: string; question: string; answer: string }[];
+}
+
+const faqSections: FAQSection[] = [
+    {
+        id: 'listings',
+        title: 'Managing Listings',
+        icon: 'restaurant-menu',
+        questions: [
+            {
+                id: '1',
+                question: 'How do I update my surplus inventory?',
+                answer: 'Go to your Dashboard, tap on Listings, and select the item you want to update. You can modify quantity, price, and availability times.',
+            },
+            {
+                id: '2',
+                question: 'Can I change pickup times?',
+                answer: 'Yes! In your listing settings, you can adjust pickup windows. Changes will apply to future orders only.',
+            },
+        ],
+    },
+    {
+        id: 'payouts',
+        title: 'Orders & Payouts',
+        icon: 'payments',
+        questions: [
+            {
+                id: '3',
+                question: 'When will I receive my payout?',
+                answer: 'Payouts are processed every Monday and Thursday. Funds typically arrive within 1-2 business days.',
+            },
+            {
+                id: '4',
+                question: 'How to handle a customer no-show?',
+                answer: 'If a customer doesn\'t pick up within the window, mark the order as "No Show" in your dashboard. You\'ll still receive payment.',
+            },
+        ],
+    },
+    {
+        id: 'account',
+        title: 'Account Settings',
+        icon: 'settings',
+        questions: [
+            {
+                id: '5',
+                question: 'How do I change my store address?',
+                answer: 'Go to Profile > Store Settings > Location. Update your address and save. Changes may require verification.',
+            },
+        ],
+    },
 ];
 
 interface HelpCenterScreenProps {
@@ -20,138 +75,286 @@ interface HelpCenterScreenProps {
 }
 
 export const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
-    const [activeTab, setActiveTab] = useState('profile');
-    const [selectedFilter, setSelectedFilter] = useState('All topics');
-    const [expandedId, setExpandedId] = useState<string | null>('2');
+    const [activeTab, setActiveTab] = useState('support');
     const [searchQuery, setSearchQuery] = useState('');
+    const [expandedQuestions, setExpandedQuestions] = useState<string[]>([]);
 
-    const toggleExpand = (id: string) => {
-        setExpandedId(expandedId === id ? null : id);
+    const toggleQuestion = (questionId: string) => {
+        setExpandedQuestions((prev) =>
+            prev.includes(questionId)
+                ? prev.filter((id) => id !== questionId)
+                : [...prev, questionId]
+        );
     };
 
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
+                {/* Header */}
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
+                        <MaterialIcons name="arrow-back-ios-new" size={20} color={colors.textPrimary} />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Help Center</Text>
-                    <View style={{ width: 24 }} />
+                    <TouchableOpacity onPress={() => navigation.navigate('SupportChat')}>
+                        <Text style={styles.chatLink}>Chat</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-                    {/* Title */}
-                    <Text style={styles.title}>How can we</Text>
-                    <Text style={styles.titleGreen}>help you?</Text>
-
-                    {/* Search */}
+                    {/* Search Bar */}
                     <View style={styles.searchContainer}>
                         <MaterialIcons name="search" size={20} color={colors.textSecondary} />
                         <TextInput
                             style={styles.searchInput}
-                            placeholder="Search topics (e.g. 'refunds')"
+                            placeholder="Search issues (e.g. payouts, no-show...)"
                             placeholderTextColor={colors.placeholderGreen}
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
                     </View>
 
-                    {/* Filter Tabs */}
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterTabs}>
-                        {filterTabs.map((tab) => (
-                            <TouchableOpacity
-                                key={tab}
-                                style={[styles.filterTab, selectedFilter === tab && styles.filterTabActive]}
-                                onPress={() => setSelectedFilter(tab)}
-                            >
-                                <Text style={[styles.filterText, selectedFilter === tab && styles.filterTextActive]}>{tab}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-
-                    {/* FAQ Section */}
-                    <View style={styles.faqHeader}>
-                        <MaterialIcons name="help" size={20} color={colors.primary} />
-                        <Text style={styles.faqTitle}>Frequently Asked Questions</Text>
+                    {/* Popular Topics */}
+                    <View style={styles.topicsSection}>
+                        <Text style={styles.topicsLabel}>POPULAR TOPICS</Text>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={styles.topicsContainer}
+                        >
+                            {popularTopics.map((topic, index) => (
+                                <TouchableOpacity key={index} style={styles.topicChip}>
+                                    <Text style={styles.topicText}>{topic}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
                     </View>
 
-                    {faqItems.map((item) => (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={styles.faqItem}
-                            onPress={() => toggleExpand(item.id)}
-                            activeOpacity={0.7}
-                        >
-                            <View style={styles.faqQuestion}>
-                                <Text style={styles.faqQuestionText}>{item.question}</Text>
-                                <MaterialIcons
-                                    name={expandedId === item.id ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
-                                    size={24}
-                                    color={colors.textSecondary}
-                                />
+                    {/* FAQ Sections */}
+                    {faqSections.map((section) => (
+                        <View key={section.id} style={styles.faqSection}>
+                            <View style={styles.sectionHeader}>
+                                <MaterialIcons name={section.icon} size={20} color={colors.primary} />
+                                <Text style={styles.sectionTitle}>{section.title}</Text>
                             </View>
-                            {expandedId === item.id && item.answer && (
-                                <Text style={styles.faqAnswer}>{item.answer}</Text>
-                            )}
-                        </TouchableOpacity>
+
+                            {section.questions.map((q) => (
+                                <TouchableOpacity
+                                    key={q.id}
+                                    style={styles.questionCard}
+                                    onPress={() => toggleQuestion(q.id)}
+                                    activeOpacity={0.7}
+                                >
+                                    <View style={styles.questionHeader}>
+                                        <Text style={styles.questionText}>{q.question}</Text>
+                                        <MaterialIcons
+                                            name={expandedQuestions.includes(q.id) ? 'expand-less' : 'expand-more'}
+                                            size={24}
+                                            color={colors.textSecondary}
+                                        />
+                                    </View>
+                                    {expandedQuestions.includes(q.id) && (
+                                        <Text style={styles.answerText}>{q.answer}</Text>
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     ))}
 
-                    {/* Still Stuck Card */}
-                    <View style={styles.stuckCard}>
+                    {/* Still Need Help */}
+                    <View style={styles.needHelpCard}>
                         <View style={styles.chatIconContainer}>
-                            <MaterialIcons name="chat-bubble" size={32} color={colors.primary} />
+                            <MaterialIcons name="headset-mic" size={32} color={colors.primary} />
                         </View>
-                        <Text style={styles.stuckTitle}>Still stuck?</Text>
-                        <Text style={styles.stuckSubtitle}>
-                            Our PH support team is available 24/7 to help you resolve any issues.
+                        <Text style={styles.needHelpTitle}>Still need help?</Text>
+                        <Text style={styles.needHelpText}>
+                            Our support team is available daily from 9 AM to 9 PM PHT.
                         </Text>
-                        <TouchableOpacity style={styles.chatBtn} onPress={() => navigation.navigate('SupportBot')}>
-                            <MaterialIcons name="chat" size={18} color={colors.backgroundDark} />
-                            <Text style={styles.chatBtnText}>Chat with Support</Text>
+                        <TouchableOpacity
+                            style={styles.startChatButton}
+                            onPress={() => navigation.navigate('SupportChat')}
+                        >
+                            <Text style={styles.startChatText}>Start a Chat</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
             </SafeAreaView>
+
             <BottomNav
                 activeTab={activeTab}
                 onTabPress={(tab) => {
                     setActiveTab(tab);
-                    if (tab === 'home') navigation.navigate('BuyerHome');
-                    if (tab === 'orders') navigation.navigate('BuyerOrders');
+                    if (tab === 'dashboard') navigation.navigate('MerchantDashboard');
+                    if (tab === 'listings') navigation.navigate('PostListing');
+                    if (tab === 'profile') navigation.navigate('Profile');
                 }}
-                type="buyer"
+                type="merchant"
             />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.backgroundDark },
-    safeArea: { flex: 1 },
-    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
-    headerTitle: { fontSize: fontSize.lg, fontWeight: '700', color: colors.textPrimary },
-    scrollView: { flex: 1 },
-    scrollContent: { padding: spacing.lg, paddingBottom: 120 },
-    title: { fontSize: 28, fontWeight: '700', color: colors.textPrimary },
-    titleGreen: { fontSize: 28, fontWeight: '700', color: colors.primary, marginBottom: spacing.xl },
-    searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surfaceDark, borderRadius: borderRadius.lg, paddingHorizontal: spacing.lg, height: 48, marginBottom: spacing.lg },
-    searchInput: { flex: 1, marginLeft: spacing.md, fontSize: fontSize.md, color: colors.textPrimary },
-    filterTabs: { gap: spacing.sm, marginBottom: spacing.xl },
-    filterTab: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: borderRadius.full, backgroundColor: colors.surfaceDark },
-    filterTabActive: { backgroundColor: colors.primary },
-    filterText: { fontSize: fontSize.sm, fontWeight: '500', color: colors.textSecondary },
-    filterTextActive: { color: colors.backgroundDark },
-    faqHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg },
-    faqTitle: { fontSize: fontSize.md, fontWeight: '600', color: colors.textPrimary },
-    faqItem: { backgroundColor: colors.surfaceDark, borderRadius: borderRadius.lg, marginBottom: spacing.sm, overflow: 'hidden' },
-    faqQuestion: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: spacing.lg },
-    faqQuestionText: { fontSize: fontSize.md, color: colors.textPrimary, flex: 1 },
-    faqAnswer: { fontSize: fontSize.sm, color: colors.textSecondary, lineHeight: 20, paddingHorizontal: spacing.lg, paddingBottom: spacing.lg },
-    stuckCard: { backgroundColor: colors.surfaceDark, borderRadius: borderRadius.xl, padding: spacing.xl, alignItems: 'center', marginTop: spacing.xl },
-    chatIconContainer: { width: 64, height: 64, borderRadius: 32, backgroundColor: colors.primary + '22', alignItems: 'center', justifyContent: 'center', marginBottom: spacing.lg },
-    stuckTitle: { fontSize: fontSize.lg, fontWeight: '700', color: colors.textPrimary, marginBottom: spacing.sm },
-    stuckSubtitle: { fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center', marginBottom: spacing.lg, lineHeight: 20 },
-    chatBtn: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, backgroundColor: colors.primary, paddingHorizontal: spacing.xl, paddingVertical: spacing.md, borderRadius: borderRadius.lg },
-    chatBtnText: { fontSize: fontSize.md, fontWeight: '600', color: colors.backgroundDark },
+    container: {
+        flex: 1,
+        backgroundColor: colors.backgroundDark,
+    },
+    safeArea: {
+        flex: 1,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.md,
+        borderBottomWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    headerTitle: {
+        fontSize: fontSize.lg,
+        fontWeight: '600',
+        color: colors.textPrimary,
+    },
+    chatLink: {
+        fontSize: fontSize.md,
+        fontWeight: '600',
+        color: colors.primary,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        padding: spacing.lg,
+        paddingBottom: 120,
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: colors.surfaceDark,
+        borderRadius: borderRadius.lg,
+        paddingHorizontal: spacing.lg,
+        height: 48,
+        marginBottom: spacing.xl,
+    },
+    searchInput: {
+        flex: 1,
+        color: colors.textPrimary,
+        fontSize: fontSize.sm,
+        marginLeft: spacing.sm,
+    },
+    topicsSection: {
+        marginBottom: spacing.xl,
+    },
+    topicsLabel: {
+        fontSize: fontSize.xs,
+        fontWeight: '600',
+        color: colors.textSecondary,
+        letterSpacing: 1,
+        marginBottom: spacing.md,
+    },
+    topicsContainer: {
+        gap: spacing.sm,
+    },
+    topicChip: {
+        backgroundColor: colors.surfaceDark,
+        borderRadius: borderRadius.full,
+        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.sm,
+        borderWidth: 1,
+        borderColor: colors.borderDark,
+        marginRight: spacing.sm,
+    },
+    topicText: {
+        fontSize: fontSize.sm,
+        color: colors.textPrimary,
+        fontWeight: '500',
+    },
+    faqSection: {
+        marginBottom: spacing.xl,
+    },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.sm,
+        marginBottom: spacing.md,
+    },
+    sectionTitle: {
+        fontSize: fontSize.lg,
+        fontWeight: '700',
+        color: colors.textPrimary,
+    },
+    questionCard: {
+        backgroundColor: colors.surfaceDark,
+        borderRadius: borderRadius.lg,
+        padding: spacing.lg,
+        marginBottom: spacing.md,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    questionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    questionText: {
+        flex: 1,
+        fontSize: fontSize.md,
+        color: colors.textPrimary,
+        fontWeight: '500',
+        marginRight: spacing.md,
+    },
+    answerText: {
+        fontSize: fontSize.sm,
+        color: colors.textSecondary,
+        lineHeight: 22,
+        marginTop: spacing.md,
+        paddingTop: spacing.md,
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    needHelpCard: {
+        backgroundColor: colors.surfaceDark,
+        borderRadius: borderRadius.xl,
+        padding: spacing.xl,
+        alignItems: 'center',
+        marginTop: spacing.lg,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    chatIconContainer: {
+        width: 64,
+        height: 64,
+        borderRadius: borderRadius.full,
+        backgroundColor: 'rgba(19, 236, 109, 0.15)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: spacing.lg,
+    },
+    needHelpTitle: {
+        fontSize: fontSize.lg,
+        fontWeight: '700',
+        color: colors.textPrimary,
+        marginBottom: spacing.sm,
+    },
+    needHelpText: {
+        fontSize: fontSize.sm,
+        color: colors.textSecondary,
+        textAlign: 'center',
+        marginBottom: spacing.lg,
+    },
+    startChatButton: {
+        width: '100%',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        borderColor: colors.primary,
+        borderRadius: borderRadius.lg,
+        paddingVertical: spacing.md,
+        alignItems: 'center',
+    },
+    startChatText: {
+        fontSize: fontSize.md,
+        fontWeight: '600',
+        color: colors.primary,
+    },
 });

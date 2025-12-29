@@ -40,6 +40,16 @@ import {
   ScheduledListingsScreen,
   HelpCenterScreen,
   PriceOptimizerScreen,
+  MyAddressesScreen,
+  MyWalletScreen,
+  TopUpScreen,
+  SetupSubscriptionScreen,
+  MySubscriptionsScreen,
+  AdvancedAnalyticsScreen,
+  TeamManagementScreen,
+  DeliveryCheckoutScreen,
+  DeliveryTrackingScreen,
+  NewListingScreen,
 } from './src/screens';
 
 const Stack = createNativeStackNavigator();
@@ -90,6 +100,16 @@ export default function App() {
             <Stack.Screen name="ScheduledListings" component={ScheduledListingsScreen} />
             <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
             <Stack.Screen name="PriceOptimizer" component={PriceOptimizerScreen} />
+            <Stack.Screen name="MyAddresses" component={MyAddressesScreen} />
+            <Stack.Screen name="MyWallet" component={MyWalletScreen} />
+            <Stack.Screen name="TopUp" component={TopUpScreen} />
+            <Stack.Screen name="SetupSubscription" component={SetupSubscriptionScreen} />
+            <Stack.Screen name="MySubscriptions" component={MySubscriptionsScreen} />
+            <Stack.Screen name="AdvancedAnalytics" component={AdvancedAnalyticsScreen} />
+            <Stack.Screen name="TeamManagement" component={TeamManagementScreen} />
+            <Stack.Screen name="DeliveryCheckout" component={DeliveryCheckoutScreen} />
+            <Stack.Screen name="DeliveryTracking" component={DeliveryTrackingScreen} />
+            <Stack.Screen name="NewListing" component={NewListingScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

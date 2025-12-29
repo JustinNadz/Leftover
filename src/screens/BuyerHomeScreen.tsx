@@ -240,6 +240,7 @@ export const BuyerHomeScreen: React.FC<BuyerHomeScreenProps> = ({ navigation }) 
                 onTabPress={(tab) => {
                     setActiveTab(tab);
                     if (tab === 'orders') navigation.navigate('BuyerOrders');
+                    if (tab === 'wallet') navigation.navigate('MyWallet');
                     if (tab === 'profile') navigation.navigate('Profile');
                 }}
                 type="buyer"

@@ -12,12 +12,14 @@ interface BottomNavProps {
 const buyerTabs = [
     { id: 'home', icon: 'home', label: 'Home' },
     { id: 'orders', icon: 'receipt-long', label: 'Orders' },
+    { id: 'wallet', icon: 'account-balance-wallet', label: 'Wallet' },
     { id: 'profile', icon: 'person', label: 'Profile' },
 ];
 
 const merchantTabs = [
     { id: 'dashboard', icon: 'dashboard', label: 'Dashboard' },
     { id: 'listings', icon: 'list-alt', label: 'Listings' },
+    { id: 'support', icon: 'help-outline', label: 'Support' },
     { id: 'profile', icon: 'person', label: 'Profile' },
 ];
 
