@@ -11,7 +11,7 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNav, ProductCard } from '../components';
-import { colors, spacing, fontSize, borderRadius } from '../theme';
+import { colors, spacing, fontSize, borderRadius, layout } from '../theme';
 
 const AVATAR_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuApCjs8UuWec7W3OHoAKmpRGFxOSQTTVsqBHOK0Nmcivk-CnkSWQFSkx_k3lEcZFNShlEKVD13jCKhH7qBBSN6A1I8zjnJ21JCrAiofeS-C3rXSkocrJdt64243WsF9mO-hwWLh0jL1QsiwSPKwgPFWPJ9f6MANOnIrD46GLQTfj4In2zxogtBKJsQZOTfDzpEvnbpleMyd4wX77zt3ugRhHfc9tY803fYb2MvK31yv6j39ADI6DWPmcEt-B947Lno7p_yHX4Gxorsv';
 
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     scrollContent: {
-        paddingBottom: 100,
+        paddingBottom: layout.contentPaddingBottom,
     },
     categoriesContainer: {
         paddingHorizontal: spacing.lg,

@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { colors, borderRadius, spacing, fontSize } from '../theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors, spacing, fontSize, layout } from '../theme';
 
 interface BottomNavProps {
     activeTab: string;
@@ -28,10 +29,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     onTabPress,
     type = 'buyer',
 }) => {
+    const insets = useSafeAreaInsets();
     const tabs = type === 'buyer' ? buyerTabs : merchantTabs;
 
+    // Calculate safe bottom padding (minimum 16 for devices without notch)
+    const bottomPadding = Math.max(insets.bottom, 16);
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingBottom: bottomPadding }]}>
             <View style={styles.inner}>
                 {tabs.map((tab) => {
                     const isActive = activeTab === tab.id;
@@ -44,7 +49,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                         >
                             <MaterialIcons
                                 name={tab.icon as keyof typeof MaterialIcons.glyphMap}
-                                size={26}
+                                size={24}
                                 color={isActive ? colors.primary : colors.textSecondary}
                             />
                             <Text
@@ -52,6 +57,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                                     styles.label,
                                     isActive ? styles.labelActive : styles.labelInactive,
                                 ]}
+                                numberOfLines={1}
                             >
                                 {tab.label}
                             </Text>
@@ -69,27 +75,33 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: 'rgba(17, 34, 24, 0.95)',
+        backgroundColor: 'rgba(17, 34, 24, 0.98)',
         borderTopWidth: 1,
-        borderTopColor: 'rgba(255, 255, 255, 0.05)',
-        paddingBottom: 24,
-        paddingTop: 8,
+        borderTopColor: colors.borderMuted,
+        paddingTop: spacing.sm,
+        // Ensure minimum height for touch targets
+        minHeight: layout.bottomNavHeight,
     },
     inner: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        height: 56,
+        height: 52,
     },
     tab: {
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
         gap: 4,
+        paddingVertical: spacing.xs,
+        // Minimum touch target size (44pt recommended by Apple/Google)
+        minWidth: 44,
+        minHeight: 44,
     },
     label: {
         fontSize: fontSize.xs,
         fontWeight: '500',
+        textAlign: 'center',
     },
     labelActive: {
         color: colors.primary,

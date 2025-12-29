@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Switch } f
 import { MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomNav } from '../components';
-import { colors, spacing, fontSize, borderRadius } from '../theme';
+import { colors, spacing, fontSize, borderRadius, layout } from '../theme';
 
 const AVATAR_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCHMLxUXi0vOvWtx60JlhXNsWI-9QjydJS8l8yXmMoe96cuJBb0Hn0JF4W-To09wL0pxZiZGnAZrpX00wvJ2yLATIyj_lU7sY1msrYBqoE0fBppCHFYw727SxgOOQaTxaLBjpgaM5gXid5yi904FGU4_33FnGxjfjNIlIYWuFg77jZwSUceQxBOi02s9BVTJzzU27CMb1TytFGTgTuqZ5MnaGVjeLpOg6FAMhB04bnwtWL5JHgzLC-q52wZ8sCcTmBRmkdaiybqQZcQ';
 
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.backgroundDark },
     safeArea: { flex: 1 },
     scrollView: { flex: 1 },
-    scrollContent: { paddingBottom: 120 },
+    scrollContent: { paddingBottom: layout.contentPaddingBottom },
     profileHeader: { alignItems: 'center', paddingVertical: spacing.xl, borderBottomWidth: 1, borderBottomColor: colors.surfaceHighlight },
     avatarContainer: { position: 'relative', marginBottom: spacing.md },
     avatar: { width: 100, height: 100, borderRadius: 50, borderWidth: 3, borderColor: colors.primary + '55' },

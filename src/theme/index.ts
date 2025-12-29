@@ -7,24 +7,24 @@ export const colors = {
   // Backgrounds
   backgroundLight: '#f6f8f7',
   backgroundDark: '#102218',
-  
+
   // Surfaces
   surfaceDark: '#193324',
   surfaceHighlight: '#234833',
   cardDark: '#1e3a2b',
   inputDark: '#234833',
-  
+
   // Text
   textPrimary: '#ffffff',
   textSecondary: '#92c9a9',
   textMuted: '#6b7280',
   placeholderGreen: '#92c9a9',
-  
+
   // Semantic
   error: '#ef4444',
   warning: '#f59e0b',
   success: '#13ec6d',
-  
+
   // Borders
   borderLight: '#e5e7eb',
   borderDark: '#326748',
@@ -67,4 +67,83 @@ export const fontWeight = {
   semibold: '600' as const,
   bold: '700' as const,
   extrabold: '800' as const,
+};
+
+// Layout constants for consistent cross-device alignment
+export const layout = {
+  // Bottom navigation height (consistent across all screens)
+  bottomNavHeight: 84,
+
+  // Header height (consistent across all screens)
+  headerHeight: 56,
+
+  // Screen padding (horizontal)
+  screenPaddingH: spacing.lg,
+
+  // Bottom sheet padding for content above BottomNav
+  contentPaddingBottom: 100,
+
+  // Fixed bottom section height (for buttons above BottomNav)
+  bottomSectionHeight: 80,
+};
+
+// Common style patterns for consistent layouts
+export const commonStyles = {
+  // Full screen container with dark background
+  screenContainer: {
+    flex: 1,
+    backgroundColor: colors.backgroundDark,
+  },
+
+  // Safe area wrapper
+  safeArea: {
+    flex: 1,
+  },
+
+  // Standard header row
+  headerRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    minHeight: layout.headerHeight,
+  },
+
+  // Scrollable content area
+  scrollContent: {
+    paddingHorizontal: spacing.lg,
+    paddingBottom: layout.contentPaddingBottom,
+  },
+
+  // Fixed bottom action section (above BottomNav)
+  bottomAction: {
+    position: 'absolute' as const,
+    bottom: layout.bottomNavHeight,
+    left: 0,
+    right: 0,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
+    backgroundColor: 'rgba(16, 34, 24, 0.98)',
+    borderTopWidth: 1,
+    borderTopColor: colors.borderMuted,
+  },
+
+  // Primary action button
+  primaryButton: {
+    backgroundColor: colors.primary,
+    borderRadius: borderRadius.lg,
+    paddingVertical: spacing.lg,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+
+  // Card container
+  card: {
+    backgroundColor: colors.surfaceDark,
+    borderRadius: borderRadius.lg,
+    padding: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.borderMuted,
+  },
 };
