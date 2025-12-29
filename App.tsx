@@ -36,6 +36,10 @@ import {
   SupportBotScreen,
   ManagePaymentScreen,
   LiveDeliveryScreen,
+  BulkUploadScreen,
+  ScheduledListingsScreen,
+  HelpCenterScreen,
+  PriceOptimizerScreen,
 } from './src/screens';
 
 const Stack = createNativeStackNavigator();
@@ -82,6 +86,10 @@ export default function App() {
             <Stack.Screen name="SupportBot" component={SupportBotScreen} />
             <Stack.Screen name="ManagePayment" component={ManagePaymentScreen} />
             <Stack.Screen name="LiveDelivery" component={LiveDeliveryScreen} />
+            <Stack.Screen name="BulkUpload" component={BulkUploadScreen} />
+            <Stack.Screen name="ScheduledListings" component={ScheduledListingsScreen} />
+            <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+            <Stack.Screen name="PriceOptimizer" component={PriceOptimizerScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

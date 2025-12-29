@@ -28,3 +28,7 @@ export { PartnerRegistrationScreen } from './PartnerRegistrationScreen';
 export { SupportBotScreen } from './SupportBotScreen';
 export { ManagePaymentScreen } from './ManagePaymentScreen';
 export { LiveDeliveryScreen } from './LiveDeliveryScreen';
+export { BulkUploadScreen } from './BulkUploadScreen';
+export { ScheduledListingsScreen } from './ScheduledListingsScreen';
+export { HelpCenterScreen } from './HelpCenterScreen';
+export { PriceOptimizerScreen } from './PriceOptimizerScreen';
